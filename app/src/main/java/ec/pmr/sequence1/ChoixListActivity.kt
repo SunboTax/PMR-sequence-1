@@ -20,29 +20,28 @@ class ChoixListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_choix_list)
 
         //receive the info transfered by the
-        val intent= Intent()
+        val intent= intent
         val userPseudo:String = intent.getStringExtra("userPseudo").toString()
-
+        Log.d("onCreateChoix",userPseudo)
         Log.d("onCreateChoix","searching list")
         val listBtn = findViewById<RecyclerView>(R.id.listBtn)
         val dataSet = readUserInfo("user_dataset.xml",userPseudo)
         val adapter= ItemAdapter(dataSet)
+
         listBtn.adapter = adapter
         listBtn.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         Log.d("onCreateChoix","all lists")
 
-
         adapter.setOnButtonClickListener(object:ItemAdapter.onButtonClickListener{
-
             override fun onItemClick(position: Int) {
+                Log.d("onCreateChoix","listening")
                 val verChoixListActivity = Intent(this@ChoixListActivity,ShowListActivity::class.java)
-//                Log.d("onCreateChoix","listItem:"+adapter.buttonListener.toString())
-//                val itemTitres:Array<String> = getItemUnderList("user_dataset.xml",userPseudo,dataSet[position].item)
-//                verChoixListActivity.putExtra("itemTitres",itemTitres)
+                Log.d("onCreateChoix","listItem:"+adapter.buttonListener.toString())
+                val itemTitres:Array<String> = getItemUnderList("user_dataset.xml",userPseudo,dataSet[position].item)
+                verChoixListActivity.putExtra("itemTitres",itemTitres)
                 startActivity(verChoixListActivity)
             }
         })
-
     }
 
     //get the lists of the user
@@ -54,25 +53,22 @@ class ChoixListActivity : AppCompatActivity() {
         val doc = db.parse(xmlPseudo)
 
         val userNodes: NodeList = doc.getElementsByTagName("user")
-        var it = 0
-        for(it in 0 until userNodes.length-1){
+        for(it in 0 until userNodes.length){
+            Log.d("onCreateChoix","it:"+it.toString())
             val userNode = userNodes.item(it) as Element
-            val pseudos = userNode.getElementsByTagName("pseudo")
-            if(pseudos.item(0).firstChild.nodeValue == userPseudo) {
-                break
+            Log.d("onCreateChoix",userNode.getAttribute("name").toString())
+            if(userNode.getAttribute("name").toString().equals(userPseudo)) {
+                val lists = userNode.getElementsByTagName("list")
+                for(i in 0 until lists.length){
+                    val list = lists.item(i) as Element
+                    Log.d("onCreateChoix",list.getAttribute("name").toString())
+                    result.add(Item(item = list.getAttribute("name").toString()))
+                }
+                return result
             }
         }
-
-        val userNode = userNodes.item(it) as Element
-        val lists = userNode.getElementsByTagName("list")
-        var i=0
-        while (i<lists.length){
-            val list = lists.item(i) as Element
-            val listTitre = list.getElementsByTagName("listTitre")
-            result.add(Item(item = listTitre.item(0).firstChild.nodeValue))
-            i += 1
-        }
-        return result
+        Log.d("onCreateChoix","empty")
+        return emptyList()
     }
 
     //get the items of the selected list
@@ -85,24 +81,24 @@ class ChoixListActivity : AppCompatActivity() {
 
         val userNodes: NodeList = doc.getElementsByTagName("user")
         var it = 0
-        for(it in 0 until userNodes.length-1){
+        while(it < userNodes.length){
             val userNode = userNodes.item(it) as Element
-            val pseudos = userNode.getElementsByTagName("pseudo")
-            if(pseudos.item(0).firstChild.nodeValue == userPseudo) {
+            if(userNode.getAttribute("name").toString() == userPseudo) {
                 break
             }
+            it += 1
         }
 
 
         val userNode = userNodes.item(it) as Element
         val lists = userNode.getElementsByTagName("list")
         var i=0
-        for(i in 0 until lists.length-1){
+        while(i < lists.length){
             val list = lists.item(i) as Element
-            val listTitre = list.getElementsByTagName("listTitre")
-            if(listTitre.item(0).firstChild.nodeValue == listTitreString){
+            if(list.getAttribute("name").toString() == listTitreString) {
                 break
             }
+            i += 1
         }
 
         val list = lists.item(i) as Element
@@ -110,9 +106,8 @@ class ChoixListActivity : AppCompatActivity() {
         var j=0
         while (j<lists.length){
             val item = items.item(i) as Element
-            val itemTitre = item.getElementsByTagName("itemTitre")
-            result = result.plus(itemTitre.item(0).firstChild.nodeValue)
-            i += 1
+            result = result.plus(item.getAttribute("name").toString())
+            j += 1
         }
 
         return result
@@ -124,9 +119,9 @@ class ChoixListActivity : AppCompatActivity() {
 
     class ItemAdapter(
         private val dataSet: List<Item>
-    ) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
+    ) : RecyclerView.Adapter<ItemViewHolder>() {
 
-        lateinit var buttonListener:onButtonClickListener
+        var buttonListener:onButtonClickListener? = null
 
         override fun getItemCount(): Int {
             val int = dataSet.size
@@ -140,13 +135,13 @@ class ChoixListActivity : AppCompatActivity() {
 
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-            Log.d("Create","ViewCreated")
+            Log.d("onCreateChoix","ViewCreated")
             val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
-            return ItemViewHolder(itemView = itemView,buttonListener)
+            return ItemViewHolder(itemView = itemView,buttonListener as onButtonClickListener)
         }
 
         override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-            Log.d("bind",dataSet.toString())
+            Log.d("onCreateChoix",dataSet.toString())
             holder.bind(item = dataSet[position])
         }
 
@@ -155,25 +150,28 @@ class ChoixListActivity : AppCompatActivity() {
         }
 
         fun setOnButtonClickListener(listner:onButtonClickListener){
+            Log.d("onCreateChoix","setListener")
             buttonListener = listner
         }
 
-        class ItemViewHolder(itemView: View,listner: onButtonClickListener) : RecyclerView.ViewHolder(itemView) {
-            private val listTitre:Button = itemView.findViewById<Button>(R.id.Btn)
 
-            init {
-                itemView.setOnClickListener{
-                    listner.onItemClick(adapterPosition)
-                }
-            }
-
-            fun bind(item: Item) {
-                listTitre.text = item.item
-            }
-
-        }
     }
 
+    class ItemViewHolder(itemView: View,listner: ItemAdapter.onButtonClickListener) : RecyclerView.ViewHolder(itemView) {
+        private val listTitre:Button = itemView.findViewById<Button>(R.id.Btn)
+
+        init {
+            itemView.setOnClickListener {
+                Log.d("onCreateChoix", "listner")
+                listner.onItemClick(position)
+            }
+        }
+
+        fun bind(item: Item) {
+            listTitre.text = item.item
+        }
+
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.choix_menu,menu)

@@ -37,43 +37,40 @@ class SettingActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId ==R.id.Delete) {
             Toast.makeText(this,"All pseudos deleted",Toast.LENGTH_LONG).show()
-            clearHistory("user_dataset.xml")
+//            clearHistory("user_dataset.xml")
             return true
         }else {
             return super.onOptionsItemSelected(item)
         }
     }
 
-    fun clearHistory(filename: String){
-        Log.d("clear","starting")
-        val dbf = DocumentBuilderFactory.newInstance()
-        val xmlPseudo:InputStream = assets.open(filename)
-        val db = dbf.newDocumentBuilder()
-        val doc = db.parse(xmlPseudo)
-
-        val childList:NodeList = doc.getElementsByTagName("user")
-        var user:Node = childList.item(0)
-        user.parentNode.removeChild(user)
-
-
-        Log.d("childNode", childList.length.toString())
-    }
+//    fun clearHistory(filename: String){
+//        Log.d("clear","starting")
+//        val dbf = DocumentBuilderFactory.newInstance()
+//        val xmlPseudo:InputStream = assets.open(filename)
+//        val db = dbf.newDocumentBuilder()
+//        val doc = db.parse(xmlPseudo)
+//
+//        val childList:NodeList = doc.getElementsByTagName("user")
+//        var user:Node = childList.item(0)
+//        user.parentNode.removeChild(user)
+//
+//
+//        Log.d("childNode", childList.length.toString())
+//    }
 
 
 
     fun readDataSet(filename:String):List<Item>{
         val result = mutableListOf<Item>()
-
         val dbf = DocumentBuilderFactory.newInstance()
-        val xmlPseudo:InputStream = assets.open(filename)
+        val inputStream: InputStream = assets.open(filename)
         val db = dbf.newDocumentBuilder()
-        val doc = db.parse(xmlPseudo)
-
-        val userNodes:NodeList = doc.getElementsByTagName("user")
-        for(it in 0..(userNodes.length-1)){
+        val doc = db.parse(inputStream)
+        val userNodes: NodeList = doc.getElementsByTagName("user")
+        for(it in 0 until userNodes.length){
             val userNode = userNodes.item(it) as Element
-            val pseudo = userNode.getElementsByTagName("pseudo")
-            result.add(Item(pseudo=pseudo.item(0).firstChild.nodeValue))
+            result.add(Item(item = userNode.getAttribute("name").toString()))
         }
         return result
     }
@@ -106,14 +103,14 @@ class SettingActivity : AppCompatActivity() {
     }
 
     data class Item(
-        val pseudo: String
+        val item: String
     )
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val pseudo = itemView.findViewById<TextView>(R.id.pseudo)
 
         fun bind(item: Item) {
-            pseudo.text = item.pseudo
+            pseudo.text = item.item
         }
     }
 }
