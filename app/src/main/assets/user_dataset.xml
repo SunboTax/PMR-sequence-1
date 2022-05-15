@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--&lt;!&ndash;data format&ndash;&gt;-->
+<!--<user>-->
+<!--    <pseudo></pseudo>-->
+<!--    <list>-->
+<!--        <item></item>-->
+<!--    </list>-->
+<!--</user>-->
+
+<records>
+    <user>
+        <pseudo>Cortana</pseudo>
+        <list>
+            <listTitre>List 1</listTitre>
+            <item>
+                <itemTitle>Item 1</itemTitle>
+            </item>
+            <item>
+                <itemTitle>Item 2</itemTitle>
+            </item>
+            <item>
+                <itemTitle>Item 3</itemTitle>
+            </item>
+        </list>
+    </user>
+</records>
