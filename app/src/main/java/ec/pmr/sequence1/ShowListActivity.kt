@@ -3,9 +3,9 @@ package ec.pmr.sequence1
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Button
+import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -14,18 +14,31 @@ class ShowListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_list)
 
-        val intent = Intent()
+        val intent = intent
         val itemTitres:Array<String> = intent.getStringArrayExtra("itemTitres") as Array<String>
 
         val dataSet = mutableListOf<Item>()
-        for(it in itemTitres){
-            dataSet.add(Item(item = it))
+        for(element in itemTitres){
+            dataSet.add(Item(item = element))
         }
 
-        val listBtn = findViewById<RecyclerView>(R.id.listCB)
+        val listBtn = findViewById<RecyclerView>(R.id.recycle_Show)
 
         listBtn.adapter = ItemAdapter(dataSet as List<Item>)
         listBtn.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        val editText = findViewById<EditText>(R.id.edt_newList_Show)
+        val btn = findViewById<Button>(R.id.btn_OK_Show)
+        btn.setOnClickListener(object :View.OnClickListener{
+            override fun onClick(v: View?) {
+                createList(editText.text.toString(),"user_dataset.xml")
+            }
+        })
+    }
+
+    //create new item in the list for the user
+    fun createList(listName:String,filename: String){
+        TODO("manipulate the dataset")
     }
 
     data class Item(
@@ -38,32 +51,24 @@ class ShowListActivity : AppCompatActivity() {
 
         override fun getItemCount(): Int {
             val int = dataSet.size
-            Log.d("getSize",int.toString())
             return int
         }
 
-        override fun getItemViewType(position: Int): Int {
-            return 0
-        }
-
-
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-            Log.d("Create","ViewCreated")
-            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
+            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_switch, parent, false)
             return ItemViewHolder(itemView = itemView)
         }
 
         override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-            Log.d("bind",dataSet.toString())
             holder.bind(item = dataSet[position])
         }
     }
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val listTitre = itemView.findViewById<Button>(R.id.Btn)
+        private val itemTitre = itemView.findViewById<Button>(R.id.switch_CheckBox_Show)
 
         fun bind(item: Item) {
-            listTitre.text = item.item
+            itemTitre.text = item.item
         }
     }
 

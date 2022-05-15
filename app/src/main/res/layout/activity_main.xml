@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/text_Pseudo_Main"
         android:layout_width="80dp"
         android:layout_height="37dp"
         android:layout_marginTop="28dp"
@@ -21,17 +21,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/edt_Pseudo_Main"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="@+id/title"
+        android:autofillHints="Cortana"
+        app:layout_constraintBottom_toBottomOf="@+id/text_Pseudo_Main"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/title"
-        app:layout_constraintTop_toTopOf="@+id/title" />
+        app:layout_constraintStart_toEndOf="@+id/text_Pseudo_Main"
+        app:layout_constraintTop_toTopOf="@+id/text_Pseudo_Main" />
 
     <Button
-        android:id="@+id/buTTon"
+        android:id="@+id/btn_Ok_Main"
         android:layout_width="60dp"
         android:layout_height="37dp"
         android:text="OK"
@@ -39,7 +40,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.93"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toBottomOf="@+id/edt_Pseudo_Main" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

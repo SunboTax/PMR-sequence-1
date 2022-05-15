@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<!--&lt;!&ndash;data format&ndash;&gt;-->
-<!--<user>-->
-<!--    <pseudo></pseudo>-->
-<!--    <list>-->
-<!--        <item></item>-->
-<!--    </list>-->
-<!--</user>-->
-
 <records>
     <user name="Cortana">
         <list name="list 1">
+            <item name="Item 1"/>
+            <item name="Item 2"/>
+            <item name="Item 3"/>
+        </list>
+        <list name="list 2">
+            <item name="Item 1"/>
+            <item name="Item 2"/>
+            <item name="Item 3"/>
+        </list>
+        <list name="list 3">
             <item name="Item 1"/>
             <item name="Item 2"/>
             <item name="Item 3"/>

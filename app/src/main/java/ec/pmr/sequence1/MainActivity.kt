@@ -3,7 +3,6 @@ package ec.pmr.sequence1
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -11,18 +10,8 @@ import android.widget.Button
 import android.widget.EditText
 import org.w3c.dom.Element
 import org.w3c.dom.NodeList
-import java.io.File
-import java.io.IOException
 import java.io.InputStream
-import java.nio.file.Paths
 import javax.xml.parsers.DocumentBuilderFactory
-import javax.xml.transform.Transformer
-import javax.xml.transform.TransformerFactory
-import javax.xml.transform.OutputKeys
-import javax.xml.transform.TransformerException
-import javax.xml.transform.dom.DOMSource
-import javax.xml.transform.stream.StreamResult
-import javax.xml.transform.stream.StreamSource
 import ec.pmr.sequence1.ChoixListActivity as ChoixListActivity
 
 class MainActivity : AppCompatActivity(){
@@ -32,25 +21,21 @@ class MainActivity : AppCompatActivity(){
         setContentView(R.layout.activity_main)
         
 
-        Log.d("Main","running")
-        val refEdtPesudo = findViewById<EditText>(R.id.editText)
-        val refButton = findViewById<Button>(R.id.buTTon)
+        val refEdtPesudo = findViewById<EditText>(R.id.edt_Pseudo_Main)
+        val refButton = findViewById<Button>(R.id.btn_Ok_Main)
 
         //jump to the ChoixListActivity interface when clicking "ok" button
         refButton.setOnClickListener(object:View.OnClickListener{
             override fun onClick(v: View?) {
                 val verChoixListActivity = Intent(this@MainActivity,ChoixListActivity::class.java)
-                Log.d("Main","reading")
 //                val dataSet:List<Item> = readDataSet("user_dataset.xml")
 //                if(isNewUser(dataSet,refEdtPesudo.text.toString())){
-//                    Log.d("Main","creating")
+//
 //                    createUserInfo(refEdtPesudo.text.toString(), "user_dataset.xml")
 //                }
 
-                Log.d("Main",refEdtPesudo.text.toString())
                 //transfer user info to the next activity
                 verChoixListActivity.putExtra("userPseudo",refEdtPesudo.text.toString())
-                Log.d("Main","jumping")
                 startActivity(verChoixListActivity)
             }
         })
@@ -69,6 +54,7 @@ class MainActivity : AppCompatActivity(){
         return true
     }
 
+//    //create new user info in the dataset
 //    fun createUserInfo(pseudo: String,filename: String){
 //        val dbf = DocumentBuilderFactory.newInstance()
 //        Log.d("Main","5")

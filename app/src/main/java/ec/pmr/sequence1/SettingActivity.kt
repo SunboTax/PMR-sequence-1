@@ -9,10 +9,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.w3c.dom.Element
-import org.w3c.dom.Node
 import org.w3c.dom.NodeList
-import org.xmlpull.v1.XmlPullParser
-import org.xmlpull.v1.XmlPullParserFactory
 import java.io.InputStream
 import javax.xml.parsers.DocumentBuilderFactory
 
@@ -21,7 +18,7 @@ class SettingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
 
-        val list = findViewById<RecyclerView>(R.id.list)
+        val list = findViewById<RecyclerView>(R.id.recycle_Setting)
         val dataSet = readDataSet("user_dataset.xml")
         Log.d("dataset",dataSet.toString())
         list.adapter = ItemAdapter(dataSet)
@@ -107,7 +104,7 @@ class SettingActivity : AppCompatActivity() {
     )
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val pseudo = itemView.findViewById<TextView>(R.id.pseudo)
+        private val pseudo = itemView.findViewById<TextView>(R.id.text_Pseudo_Setting)
 
         fun bind(item: Item) {
             pseudo.text = item.item
