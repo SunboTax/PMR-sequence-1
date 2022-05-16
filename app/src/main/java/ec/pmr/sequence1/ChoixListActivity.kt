@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.w3c.dom.Element
 import org.w3c.dom.NodeList
+import java.io.FileInputStream
 import java.io.InputStream
 import javax.xml.parsers.DocumentBuilderFactory
 
@@ -55,7 +56,7 @@ class ChoixListActivity : AppCompatActivity() {
     fun readUserInfo(filename:String,userPseudo:String):List<Item>{
         val result = mutableListOf<Item>()
         val dbf = DocumentBuilderFactory.newInstance()
-        val xmlPseudo: InputStream = assets.open(filename)
+        val xmlPseudo: InputStream = FileInputStream(filename)
         val db = dbf.newDocumentBuilder()
         val doc = db.parse(xmlPseudo)
 
