@@ -3,160 +3,71 @@ package ec.pmr.sequence1
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import org.w3c.dom.Element
-import org.w3c.dom.NodeList
-import java.io.FileInputStream
-import java.io.InputStream
-import javax.xml.parsers.DocumentBuilderFactory
+import ec.pmr.sequence1.adapter.ListAdapter
+import ec.pmr.sequence1.model.ListeToDo
+import ec.pmr.sequence1.model.ProfilListeTodo
 
 class ChoixListActivity : AppCompatActivity() {
+
+    //the profile held during the choixList activity
+    lateinit var profile:ProfilListeTodo
+
+    val requestCodeToShowListActivity = 2
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choix_list)
 
+        Log.d("Choix","onCreate")
         //receive the info transfered by the
         val intent= intent
-        val userPseudo:String = intent.getStringExtra("userPseudo").toString()
+        profile = intent.getSerializableExtra("user") as ProfilListeTodo
+        this.title = profile.getLogin()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        Log.d("Choix",profile.toString())
+        //show all list titles
         val listBtn = findViewById<RecyclerView>(R.id.recycle_Choix)
-        val dataSet = readUserInfo("user_dataset.xml",userPseudo)
-        val adapter= ItemAdapter(dataSet)
+        val dataset: ArrayList<ListeToDo> ?= profile.getMesListeToDo()
+        Log.d("Choix",dataset.toString())
+        val adapter= ListAdapter(dataset as ArrayList<ListeToDo>)
+
 
         listBtn.adapter = adapter
         listBtn.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
-        adapter.setOnButtonClickListener(object:ItemAdapter.onButtonClickListener{
+        adapter.setOnButtonClickListener(object:ListAdapter.onButtonClickListener{
             override fun onItemClick(position: Int) {
-                val verShowListActivity = Intent(this@ChoixListActivity,ShowListActivity::class.java)
-                val itemTitres:Array<String> = getItemUnderList("user_dataset.xml",userPseudo,dataSet[position].item)
-                verShowListActivity.putExtra("itemTitres",itemTitres)
-                startActivity(verShowListActivity)
+                val toShowListActivity = Intent(this@ChoixListActivity,ShowListActivity::class.java)
+                toShowListActivity.putExtra("user",this@ChoixListActivity.profile)
+                toShowListActivity.putExtra("list",dataset[position])
+                startActivityForResult(toShowListActivity,requestCodeToShowListActivity)
             }
         })
 
+        //add new list item
         val editText = findViewById<EditText>(R.id.edt_newList_Choix)
         val btn = findViewById<Button>(R.id.btn_OK_Choix)
-        btn.setOnClickListener(object :View.OnClickListener{
-            override fun onClick(v: View?) {
-                createList(editText.text.toString(),"user_dataset.xml")
+        btn.setOnClickListener{
+            Log.d("Choix","add new list")
+            if(profile.inMesListeToDo(editText.text.toString())){
+                Toast.makeText(this,"list existed",Toast.LENGTH_SHORT).show()
+            }else {
+                profile.ajouteListe(ListeToDo(editText.text.toString()))
+                adapter.addList(editText.text.toString())
             }
-        })
-    }
-
-    //create new list for the user
-    fun createList(listName:String,filename: String){
-        TODO("manipulate the dataset")
-    }
-
-    //get the lists of the user
-    fun readUserInfo(filename:String,userPseudo:String):List<Item>{
-        val result = mutableListOf<Item>()
-        val dbf = DocumentBuilderFactory.newInstance()
-        val xmlPseudo: InputStream = FileInputStream(filename)
-        val db = dbf.newDocumentBuilder()
-        val doc = db.parse(xmlPseudo)
-
-        val userNodes: NodeList = doc.getElementsByTagName("user")
-        for(it in 0 until userNodes.length){
-            val userNode = userNodes.item(it) as Element
-            if(userNode.getAttribute("name").toString().equals(userPseudo)) {
-                val lists = userNode.getElementsByTagName("list")
-                for(i in 0 until lists.length){
-                    val list = lists.item(i) as Element
-                    result.add(Item(item = list.getAttribute("name").toString()))
-                }
-                return result
-            }
+            editText.setText("")
         }
-        return emptyList()
-    }
-
-    //get the items of the selected list
-    fun getItemUnderList(filename:String,userPseudo:String,listTitreString:String):Array<String>{
-        var result = emptyArray<String>()
-        val dbf = DocumentBuilderFactory.newInstance()
-        val xmlPseudo: InputStream = assets.open(filename)
-        val db = dbf.newDocumentBuilder()
-        val doc = db.parse(xmlPseudo)
-
-        val userNodes: NodeList = doc.getElementsByTagName("user")
-        for(it in 0 until userNodes.length){
-            val userNode = userNodes.item(it) as Element
-            if(userNode.getAttribute("name").toString() == userPseudo) {
-                val lists = userNode.getElementsByTagName("list")
-                for(i in 0 until lists.length){
-                    val list = lists.item(i) as Element
-                    if(list.getAttribute("name").toString() == listTitreString) {
-                        val items = list.getElementsByTagName("item")
-                        for(j in 0 until items.length){
-                            val item = items.item(j) as Element
-                            result = result.plus(item.getAttribute("name").toString())
-                        }
-
-                        return result
-                    }
-                }
-            }
-        }
-        return emptyArray()
-
-    }
-
-    data class Item(
-        val item:String
-    )
-
-    class ItemAdapter(
-        private val dataSet: List<Item>
-    ) : RecyclerView.Adapter<ItemViewHolder>() {
-
-        var buttonListener:onButtonClickListener? = null
-
-        override fun getItemCount(): Int {
-            val int = dataSet.size
-            return int
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
-            return ItemViewHolder(itemView = itemView,buttonListener as onButtonClickListener)
-        }
-
-        override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-            holder.bind(item = dataSet[position])
-        }
-
-        interface onButtonClickListener{
-            fun onItemClick(position:Int)
-        }
-
-        fun setOnButtonClickListener(listner:onButtonClickListener){
-            buttonListener = listner
-        }
-
-
-    }
-
-    class ItemViewHolder(itemView: View,listner: ItemAdapter.onButtonClickListener) : RecyclerView.ViewHolder(itemView) {
-        private val listTitre:Button = itemView.findViewById<Button>(R.id.btn_List_Choix)
-
-        init {
-            listTitre.setOnClickListener(object:View.OnClickListener{
-                override fun onClick(v: View?) {
-                    listner.onItemClick(adapterPosition)
-                }
-
-            })
-        }
-
-        fun bind(item: Item) {
-            listTitre.text = item.item
-        }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -172,5 +83,26 @@ class ChoixListActivity : AppCompatActivity() {
         }else {
             return super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        //according to the value of requestCode, we can know where the data come from
+        when(requestCode){requestCode->
+            if(resultCode== RESULT_OK){
+                val receivedData = data?.getSerializableExtra("list") as ListeToDo
+                Log.d("Choix",receivedData.toString())
+                this.profile.refreshList(receivedData)
+                Log.d("Choix",profile.toString())
+            }
+        }
+    }
+
+    override fun onBackPressed() {
+        val intent = Intent()
+        intent.putExtra("user",this.profile)
+        setResult(RESULT_OK,intent)
+        super.onBackPressed()
     }
 }

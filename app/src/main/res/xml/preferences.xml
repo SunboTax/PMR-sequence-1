@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:key="default_preference">
+
+    <CheckBoxPreference
+        android:key="default_enabled"
+        android:title="Using Default"
+        android:summary="choose to use a default pseudo or not"
+        android:defaultValue="false"/>
+
+    <PreferenceCategory
+        android:key="default_login_setting"
+        android:title="Default Pesudo"
+        >
+
+        <EditTextPreference
+            android:key="default_login_pseudo"
+            android:textColor="#BC787575"
+            android:textColorHint="#9C9696"
+            android:title="prefered pseudo"
+            android:defaultValue=""
+            android:text="pseudo"/>
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

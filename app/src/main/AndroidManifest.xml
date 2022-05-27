@@ -11,26 +11,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sequence1"
+        android:label = "Deadline"
         tools:targetApi="31">
         <activity
             android:name=".GeneralActivity"
             android:exported="false" />
         <activity
             android:name=".ShowListActivity"
-            android:exported="false"
-            android:label="ShowListActivity" />
+            android:exported="false" />
         <activity
             android:name=".SettingActivity"
-            android:exported="false"
-            android:label="SettingActivity" />
+            android:exported="false" />
         <activity
             android:name=".ChoixListActivity"
-            android:exported="false"
-            android:label="ChoixListActivity" />
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:label="@string/app_name">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

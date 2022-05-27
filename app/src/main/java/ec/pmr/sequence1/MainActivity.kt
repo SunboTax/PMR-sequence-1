@@ -8,132 +8,109 @@ import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
+import com.google.gson.Gson
 import ec.pmr.sequence1.model.ProfilListeTodo
-import org.w3c.dom.Element
-import org.w3c.dom.NodeList
-import java.io.*
-import javax.xml.parsers.DocumentBuilderFactory
-import javax.xml.transform.OutputKeys
-import javax.xml.transform.Transformer
-import javax.xml.transform.TransformerException
-import javax.xml.transform.TransformerFactory
-import javax.xml.transform.dom.DOMSource
-import javax.xml.transform.stream.StreamResult
-import ec.pmr.sequence1.ChoixListActivity as ChoixListActivity
 
 class MainActivity : AppCompatActivity(){
+
+    init {
+        Log.d("inMain", "first of all")
+    }
+
+
+    //default preference
+    lateinit var sharedPreferences: SharedPreferences
+    lateinit var editor: SharedPreferences.Editor
+
+    //restored preference
+    lateinit var storedSharedPreferences: SharedPreferences
+    lateinit var storedEditor: SharedPreferences.Editor
+    val gson = Gson()
+
+    //the profile held during the main activity
+    lateinit var profile:ProfilListeTodo
+
+    //define the requestCode to different activities
+    val requestCodeToChoixListActivity: Int = 1
+
+    lateinit var edtPseudoMain:EditText
+    lateinit var  btnOkMain:Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val sp:SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
-        val edtPseudoMain = findViewById<EditText>(R.id.edt_Pseudo_Main)
-        val btnOkMain = findViewById<Button>(R.id.btn_Ok_Main)
+        edtPseudoMain = findViewById<EditText>(R.id.edt_Pseudo_Main)
+        btnOkMain = findViewById<Button>(R.id.btn_Ok_Main)
+        Log.d("inMain","onCreate")
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        editor = sharedPreferences.edit()
+
+        //create a new file to restore user info or read a existed file of user info
+        storedSharedPreferences = getSharedPreferences("sharedData", MODE_PRIVATE)
+        storedEditor = storedSharedPreferences.edit()
 
         //jump to the ChoixListActivity interface when clicking "ok" button
-        btnOkMain.setOnClickListener(object:View.OnClickListener{
-            override fun onClick(v: View?) {
-                val verChoixListActivity = Intent(this@MainActivity,ChoixListActivity::class.java)
-                Log.d("inMain","startLogin")
-                val filename = "ec/pmr/sequence1/data/user_dataset.xml"
-                if(isNewUser(edtPseudoMain.text.toString(),filename)){
-                    createUserInfo(edtPseudoMain.text.toString(),filename)
-                }
+        btnOkMain.setOnClickListener{
 
-                //transfer user info to the next activity
-                verChoixListActivity.putExtra("userPseduo",edtPseudoMain.text.toString())
-                startActivity(verChoixListActivity)
-            }
-        })
-
-    }
-
-    /* check if the pseudo entered is in the user dataset
-    *? return true if it's a new user
-    */
-    fun isNewUser(pseudo:String,filename: String):Boolean{
-        val dataSet:List<Item> = readDataSet(filename)
-        for(it in dataSet){
-            if(pseudo == it.item){
-                return false
-            }
-        }
-        return true
-    }
-
-    //create new user info in the dataset
-    fun createUserInfo(pseudo: String,filename: String){
-        val dbf = DocumentBuilderFactory.newInstance()
-        Log.d("inMain","5")
-        val db = dbf.newDocumentBuilder()
-        Log.d("inMain","6")
-        val inputStream: InputStream = assets.open(filename)
-        val doc = db.parse(inputStream)
-        Log.d("inMain","7")
-        val root = doc.documentElement
-        val newUser = doc.createElement("user")
-
-        newUser.setAttribute("name",pseudo)
-        root.appendChild(newUser)
-        try {
-            val transformer: Transformer = TransformerFactory.newInstance().newTransformer()
-            Log.d("inMain", "adding")
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes")
-            Log.d("inMain", "1")
-            transformer.setOutputProperty(OutputKeys.METHOD, "xml")
-            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8")
-
-            transformer.transform(DOMSource(doc), StreamResult(File(filename)))
-            Log.d("inMain", "created")
-        }
-        catch (te: TransformerException){
-            Log.d("inMain","te:"+te.message.toString())
-        }
-        catch (ioe: IOException){
-            Log.d("inMain","io:"+ioe.message.toString())
-        }
-    }
-
-    fun readDataSet(filename:String):List<Item>{
-        Log.d("inMain","reading")
-        val result = mutableListOf<Item>()
-        val dbf = DocumentBuilderFactory.newInstance()
-        try {
-            val inputStream: InputStream = FileInputStream(File(filename))
-            val db = dbf.newDocumentBuilder()
-            val doc = db.parse(inputStream)
-            val userNodes: NodeList = doc.getElementsByTagName("user")
-            for(it in 0 until userNodes.length){
-                val userNode = userNodes.item(it) as Element
-                result.add(Item(item = userNode.getAttribute("name").toString()))
+            Log.d("inMain","Listening")
+            Log.d("inMain",edtPseudoMain.text.toString())
+            if(edtPseudoMain.text.toString() == ""){
+                Toast.makeText(this@MainActivity,"invalid enter",Toast.LENGTH_SHORT).show()
+            }else {
+                //restore the user pseudo
+                editor.putString("default_login_pseudo", edtPseudoMain.text.toString())
+                editor.commit()
             }
 
+            //check if the file of user info is void
+            val defaultProfile = storedSharedPreferences.getString(edtPseudoMain.text.toString(),"")
+            if(defaultProfile == null || defaultProfile == ""){
+                profile = ProfilListeTodo(edtPseudoMain.text.toString())
+            }else{
+                profile = gson.fromJson(defaultProfile,ProfilListeTodo::class.java)
+            }
+
+
+            val toChoixListActivity = Intent(this,ChoixListActivity::class.java)
+            Log.d("inMain","startLogin")
+
+            //transfer user info to the next activity
+            toChoixListActivity.putExtra("user",this.profile)
+            startActivityForResult(toChoixListActivity,requestCodeToChoixListActivity)
         }
-        catch (FI:IOException){
-            Log.d("inMain",FI.toString())
-        }
-        return result
     }
 
-    data class Item(
-        val item:String
-    )
+    override fun onStart() {
+        super.onStart()
+
+        Log.d("inMain","onStart")
+        //autofill the latest used user pseudo
+        val autoFill =  this.sharedPreferences.getString("default_login_pseudo","")
+        edtPseudoMain.setText(autoFill)
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+    }
 
     //the menu of preference setting realised by Action Bar
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        Log.d("inMain","onCreateOptionMenu")
         menuInflater.inflate(R.menu.choix_menu,menu)
         return true
     }
 
     //Once the menu is clicked, jump to the SettingActivity interface
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Log.d("inMain","onOptionsItemSelected")
         if(item.itemId ==R.id.Preference) {
-            val verPreference = Intent(this@MainActivity,SettingActivity::class.java)
+            val verPreference = Intent(this,SettingActivity::class.java)
             startActivity(verPreference)
             return true
         }else {
@@ -141,6 +118,23 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
+    //receive the data after click "<-" in the activity ChoixListActivity
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        //according to the value of requestCode, we can know where the data come from
+        when(requestCode){requestCode->
+            if(resultCode== RESULT_OK){
+                val receivedData = data?.getSerializableExtra("user") as ProfilListeTodo
+                this.profile = receivedData
+            }
+        }
+
+        //save any possible change made in the child activity
+        this.storedEditor.putString(edtPseudoMain.text.toString(),gson.toJson(this.profile))
+        this.storedEditor.commit()
+        Log.d("inMain","user info restored")
+    }
 }
 
 

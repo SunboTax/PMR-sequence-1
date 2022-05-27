@@ -3,73 +3,69 @@ package ec.pmr.sequence1
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ec.pmr.sequence1.adapter.ItemAdapter
+import ec.pmr.sequence1.model.ItemToDo
+import ec.pmr.sequence1.model.ListeToDo
+import ec.pmr.sequence1.model.ProfilListeTodo
 
 class ShowListActivity : AppCompatActivity() {
+
+    lateinit var profile: ProfilListeTodo
+    lateinit var list: ListeToDo
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_list)
 
+
+        Log.d("Show","onCreate")
         val intent = intent
-        val itemTitres:Array<String> = intent.getStringArrayExtra("itemTitres") as Array<String>
+        list = intent.getSerializableExtra("list") as ListeToDo
+        profile = intent.getSerializableExtra("user") as ProfilListeTodo
+        this.title = profile.getLogin()+"-"+list.getTitreListeToDo()
 
-        val dataSet = mutableListOf<Item>()
-        for(element in itemTitres){
-            dataSet.add(Item(item = element))
-        }
-
+        val dataSet:ArrayList<ItemToDo> ?= list.getLesItems()
         val listBtn = findViewById<RecyclerView>(R.id.recycle_Show)
 
-        listBtn.adapter = ItemAdapter(dataSet as List<Item>)
+        val adapter = ItemAdapter(dataSet as ArrayList<ItemToDo> )
+        listBtn.adapter = adapter
         listBtn.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
         val editText = findViewById<EditText>(R.id.edt_newList_Show)
         val btn = findViewById<Button>(R.id.btn_OK_Show)
-        btn.setOnClickListener(object :View.OnClickListener{
-            override fun onClick(v: View?) {
-                createList(editText.text.toString(),"user_dataset.xml")
+
+        btn.setOnClickListener{
+            Log.d("Show",editText.text.toString())
+            if(editText.text.toString()==""){
+                Toast.makeText(this,"invalid enter",Toast.LENGTH_SHORT).show()
+            }else{
+                if(list.inLesItems(editText.text.toString())) {
+                    Toast.makeText(this,"item existed",Toast.LENGTH_SHORT).show()
+                }else{
+                    Log.d("Show","add new item")
+                    list.ajouteItem(ItemToDo(editText.text.toString()))
+                    adapter.addItem(editText.text.toString())
+                }
+            }
+            editText.setText("")
+        }
+
+        adapter.setOnCheckBoxClickListener(object :ItemAdapter.onChekcBoxClickListener{
+            override fun onItemClick(position: Int) {
+                Log.d("Show","changing state")
+                list.getLesItems()[position].changeFait()
+                Log.d("Show","state changed")
+                Log.d("Show",list.toString())
             }
         })
-    }
 
-    //create new item in the list for the user
-    fun createList(listName:String,filename: String){
-        TODO("manipulate the dataset")
-    }
-
-    data class Item(
-        val item:String
-    )
-
-    class ItemAdapter(
-        private val dataSet: List<Item>
-    ) : RecyclerView.Adapter<ItemViewHolder>() {
-
-        override fun getItemCount(): Int {
-            val int = dataSet.size
-            return int
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_switch, parent, false)
-            return ItemViewHolder(itemView = itemView)
-        }
-
-        override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-            holder.bind(item = dataSet[position])
-        }
-    }
-
-    class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val itemTitre = itemView.findViewById<Button>(R.id.switch_CheckBox_Show)
-
-        fun bind(item: Item) {
-            itemTitre.text = item.item
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -85,5 +81,13 @@ class ShowListActivity : AppCompatActivity() {
         }else {
             return super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onBackPressed() {
+        val intent = Intent()
+        intent.putExtra("list",this.list)
+        Log.d("Show",list.toString())
+        setResult(RESULT_OK,intent)
+        super.onBackPressed()
     }
 }
