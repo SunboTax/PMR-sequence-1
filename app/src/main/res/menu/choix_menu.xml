@@ -3,6 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/Preference"
-        android:title="Preference"
+        android:title="@string/preference"
         android:icon="@drawable/ic_launcher_foreground"/>
 </menu>

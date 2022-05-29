@@ -26,7 +26,7 @@ class ChoixListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_choix_list)
 
         Log.d("Choix","onCreate")
-        //receive the info transfered by the
+        //receive the info transfered
         val intent= intent
         profile = intent.getSerializableExtra("user") as ProfilListeTodo
         this.title = profile.getLogin()
@@ -40,9 +40,9 @@ class ChoixListActivity : AppCompatActivity() {
         val listBtn = findViewById<RecyclerView>(R.id.recycle_Choix)
         val dataset: ArrayList<ListeToDo> ?= profile.getMesListeToDo()
         Log.d("Choix",dataset.toString())
+
+
         val adapter= ListAdapter(dataset as ArrayList<ListeToDo>)
-
-
         listBtn.adapter = adapter
         listBtn.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
@@ -60,11 +60,15 @@ class ChoixListActivity : AppCompatActivity() {
         val btn = findViewById<Button>(R.id.btn_OK_Choix)
         btn.setOnClickListener{
             Log.d("Choix","add new list")
-            if(profile.inMesListeToDo(editText.text.toString())){
-                Toast.makeText(this,"list existed",Toast.LENGTH_SHORT).show()
+            if(editText.text.toString() == ""){
+                Toast.makeText(this,"invalid enter",Toast.LENGTH_SHORT).show()
             }else {
-                profile.ajouteListe(ListeToDo(editText.text.toString()))
-                adapter.addList(editText.text.toString())
+                if (profile.inMesListeToDo(editText.text.toString())) {
+                    Toast.makeText(this, "list existed", Toast.LENGTH_SHORT).show()
+                } else {
+                    profile.ajouteListe(ListeToDo(editText.text.toString()))
+                    adapter.addList(editText.text.toString())
+                }
             }
             editText.setText("")
         }
@@ -85,6 +89,7 @@ class ChoixListActivity : AppCompatActivity() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 

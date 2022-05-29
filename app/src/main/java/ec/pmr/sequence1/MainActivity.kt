@@ -55,6 +55,12 @@ class MainActivity : AppCompatActivity(){
         storedSharedPreferences = getSharedPreferences("sharedData", MODE_PRIVATE)
         storedEditor = storedSharedPreferences.edit()
 
+        //autofill the latest used user pseudo
+        if(this.sharedPreferences.getBoolean("default_enabled",true)) {
+            val autoFill = this.sharedPreferences.getString("default_login_pseudo", "")
+            edtPseudoMain.setText(autoFill)
+        }
+
         //jump to the ChoixListActivity interface when clicking "ok" button
         btnOkMain.setOnClickListener{
 
@@ -66,33 +72,36 @@ class MainActivity : AppCompatActivity(){
                 //restore the user pseudo
                 editor.putString("default_login_pseudo", edtPseudoMain.text.toString())
                 editor.commit()
+
+                //check if the pseudo is in the user info
+                val userProfile = storedSharedPreferences.getString(edtPseudoMain.text.toString(), "")
+                if (userProfile == "") {
+                    profile = ProfilListeTodo(edtPseudoMain.text.toString())
+                } else {
+                    profile = gson.fromJson(userProfile, ProfilListeTodo::class.java)
+                }
+
+
+                //jump to choixlist activity
+                val toChoixListActivity = Intent(this, ChoixListActivity::class.java)
+                Log.d("inMain", "startLogin")
+                toChoixListActivity.putExtra("user", this.profile)
+                startActivityForResult(toChoixListActivity, requestCodeToChoixListActivity)
             }
-
-            //check if the file of user info is void
-            val defaultProfile = storedSharedPreferences.getString(edtPseudoMain.text.toString(),"")
-            if(defaultProfile == null || defaultProfile == ""){
-                profile = ProfilListeTodo(edtPseudoMain.text.toString())
-            }else{
-                profile = gson.fromJson(defaultProfile,ProfilListeTodo::class.java)
-            }
-
-
-            val toChoixListActivity = Intent(this,ChoixListActivity::class.java)
-            Log.d("inMain","startLogin")
-
-            //transfer user info to the next activity
-            toChoixListActivity.putExtra("user",this.profile)
-            startActivityForResult(toChoixListActivity,requestCodeToChoixListActivity)
         }
     }
 
     override fun onStart() {
         super.onStart()
-
         Log.d("inMain","onStart")
+
         //autofill the latest used user pseudo
-        val autoFill =  this.sharedPreferences.getString("default_login_pseudo","")
-        edtPseudoMain.setText(autoFill)
+        if(this.sharedPreferences.getBoolean("default_enabled",true)) {
+            val autoFill = this.sharedPreferences.getString("default_login_pseudo", "")
+            edtPseudoMain.setText(autoFill)
+        }else{
+            edtPseudoMain.setText("")
+        }
     }
 
     override fun onRestart() {
@@ -119,6 +128,7 @@ class MainActivity : AppCompatActivity(){
     }
 
     //receive the data after click "<-" in the activity ChoixListActivity
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 

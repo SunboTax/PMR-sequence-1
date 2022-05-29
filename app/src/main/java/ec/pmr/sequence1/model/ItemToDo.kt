@@ -3,24 +3,23 @@ package ec.pmr.sequence1.model
 import java.io.Serializable
 
 class ItemToDo:Serializable {
-    private var description:String? = null
+    private lateinit var description:String
     private var fait:Boolean =false
 
-    constructor()
-    constructor(description: String?) {
+    constructor(description: String) {
         this.description = description
     }
 
-    constructor(description: String?, fait: Boolean) {
+    constructor(description: String, fait: Boolean) {
         this.description = description
         this.fait = fait
     }
 
     fun getDescription():String{
-        return this.description as String
+        return this.description
     }
 
-    fun setDiscription(uneDescription: String){
+    fun setDescription(uneDescription: String){
         this.description = uneDescription
     }
 
@@ -28,6 +27,7 @@ class ItemToDo:Serializable {
         this.fait = fait
     }
 
+    //inverse the state of the checkbox
     fun changeFait(){
         this.fait = !this.fait
     }

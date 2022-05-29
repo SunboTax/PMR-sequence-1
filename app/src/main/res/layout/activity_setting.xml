@@ -5,10 +5,5 @@
     android:layout_height="match_parent"
     tools:context=".SettingActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycle_Setting"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </androidx.recyclerview.widget.RecyclerView>
 
 </FrameLayout>

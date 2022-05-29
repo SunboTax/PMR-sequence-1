@@ -32,6 +32,7 @@ class ProfilListeTodo :Serializable {
         this.mesListeToDo.plus(uneListe)
     }
 
+    //judge if a list is one of the lists of the user
     fun inMesListeToDo(titreList: String):Boolean{
         for(it in this.mesListeToDo){
             if(it.getTitreListeToDo() == titreList){
@@ -41,6 +42,7 @@ class ProfilListeTodo :Serializable {
         return false
     }
 
+    //refresh the information stored
     fun refreshList(listeToDo: ListeToDo){
         for(it in 0..this.mesListeToDo.size){
             if (this.mesListeToDo[it].getTitreListeToDo() == listeToDo.getTitreListeToDo()){

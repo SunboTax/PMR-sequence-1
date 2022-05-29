@@ -9,6 +9,6 @@
         android:id="@+id/switch_CheckBox_Show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="CheckBox"
-        tools:textSize="20dp"/>
+        android:text="@string/checkbox"
+        tools:textSize="20sp"/>
 </FrameLayout>

@@ -14,9 +14,6 @@
         android:label = "Deadline"
         tools:targetApi="31">
         <activity
-            android:name=".GeneralActivity"
-            android:exported="false" />
-        <activity
             android:name=".ShowListActivity"
             android:exported="false" />
         <activity

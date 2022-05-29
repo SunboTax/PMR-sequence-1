@@ -28,6 +28,7 @@ class ListAdapter(
         holder.bind(dataSet[position].getTitreListeToDo())
     }
 
+    //create a listener for every item in the recycle view
     interface onButtonClickListener{
         fun onItemClick(position:Int)
     }
@@ -36,6 +37,8 @@ class ListAdapter(
         buttonListener = listner
     }
 
+
+    //refresh the screen when a new list is added
     fun addList(titreList: String){
         dataSet.add(ListeToDo(titreList))
         notifyItemChanged(dataSet.size)

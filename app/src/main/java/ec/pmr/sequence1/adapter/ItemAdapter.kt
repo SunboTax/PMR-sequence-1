@@ -40,7 +40,6 @@ class ItemAdapter (
 
     fun addItem(item: String){
         dataSet.plus(ItemToDo(item))
-        Log.d("itemAdapter",dataSet.size.toString())
         notifyItemChanged(dataSet.size)
     }
 

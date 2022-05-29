@@ -6,4 +6,8 @@
     <string name="SettingActivity" />
     <string name="ChoixListActivity" />
     <string name="List" />
+    <string name="ok">OK</string>
+    <string name="pseudo">Pseudo</string>
+    <string name="preference">Preference</string>
+    <string name="checkbox">CheckBox</string>
 </resources>

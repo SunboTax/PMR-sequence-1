@@ -1,20 +1,16 @@
 package ec.pmr.sequence1.model
 
 import java.io.Serializable
-import java.util.*
 import kotlin.collections.ArrayList
 
-class ListeToDo :Serializable {
-    private lateinit var titreListeTodo:String
+class ListeToDo(private var titreListeTodo: String) :Serializable {
     private lateinit var lesItems:ArrayList<ItemToDo>
 
-    constructor(titreListeTodo: String) {
-        this.titreListeTodo = titreListeTodo
+    init {
         this.lesItems = arrayListOf()
     }
 
-
-    fun setTitreListeToDo(titreListeToDo: String){
+    fun setTitreListeToDo(titreListeTodo: String){
         this.titreListeTodo = titreListeTodo
     }
 
@@ -31,12 +27,13 @@ class ListeToDo :Serializable {
     }
 
     fun ajouteItem(itemToDo: ItemToDo){
-        this.lesItems?.add(itemToDo)
+        this.lesItems.add(itemToDo)
     }
 
-    fun inLesItems(item: String):Boolean{
+    //judge if an item is in the list
+    fun inLesItems(descriptionItem: String):Boolean{
         for(it in this.lesItems){
-            if(it.getDescription() == item){
+            if(it.getDescription() == descriptionItem){
                 return true
             }
         }
@@ -56,7 +53,7 @@ class ListeToDo :Serializable {
     }
 
     override fun toString(): String {
-        return "ListeToDo(titreListeTodo=$titreListeTodo, lesItems=${lesItems?.toString()})"
+        return "ListeToDo(titreListeTodo=$titreListeTodo, lesItems=${lesItems.toString()})"
     }
 
 }

@@ -59,10 +59,7 @@ class ShowListActivity : AppCompatActivity() {
 
         adapter.setOnCheckBoxClickListener(object :ItemAdapter.onChekcBoxClickListener{
             override fun onItemClick(position: Int) {
-                Log.d("Show","changing state")
                 list.getLesItems()[position].changeFait()
-                Log.d("Show","state changed")
-                Log.d("Show",list.toString())
             }
         })
 
