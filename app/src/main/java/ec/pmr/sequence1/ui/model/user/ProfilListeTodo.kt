@@ -1,4 +1,4 @@
-package ec.pmr.sequence1.model
+package ec.pmr.sequence1.ui.model.user
 
 import java.io.Serializable
 
@@ -28,7 +28,7 @@ class ProfilListeTodo :Serializable {
         }
     }
 
-    fun ajouteListe(uneListe:ListeToDo){
+    fun ajouteListe(uneListe: ListeToDo){
         this.mesListeToDo.plus(uneListe)
     }
 

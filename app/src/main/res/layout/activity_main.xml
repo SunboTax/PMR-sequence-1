@@ -4,43 +4,89 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
 
     <TextView
-        android:id="@+id/text_Pseudo_Main"
-        android:layout_width="80dp"
+        android:id="@+id/text_username_Main"
+        android:layout_width="100dp"
         android:layout_height="37dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="52dp"
         android:background="@color/grey_200"
         android:gravity="center"
-        android:text="@string/pseudo"
+        android:text="@string/name"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/text_password_Main"
+        android:layout_width="100dp"
+        android:layout_height="37dp"
+        android:background="@color/grey_200"
+        android:gravity="center"
+        android:text="@string/password"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/edt_password_Main"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_username_Main" />
+
     <EditText
-        android:id="@+id/edt_Pseudo_Main"
+        android:id="@+id/edt_username_Main"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:textAlignment="center"
-        android:autofillHints="Cortana"
-        app:layout_constraintBottom_toBottomOf="@+id/text_Pseudo_Main"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="@+id/text_username_Main"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/text_Pseudo_Main"
-        app:layout_constraintTop_toTopOf="@+id/text_Pseudo_Main" />
+        app:layout_constraintStart_toEndOf="@+id/text_username_Main"
+        app:layout_constraintTop_toTopOf="@+id/text_username_Main" />
+
+    <EditText
+        android:id="@+id/edt_password_Main"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:textAlignment="center"
+        android:inputType="textPassword"
+        android:selectAllOnFocus="true"
+        app:layout_constraintEnd_toEndOf="@+id/edt_username_Main"
+        app:layout_constraintStart_toStartOf="@+id/edt_username_Main"
+        app:layout_constraintTop_toBottomOf="@+id/edt_username_Main" />
 
     <Button
-        android:id="@+id/btn_Ok_Main"
-        android:layout_width="60dp"
-        android:layout_height="37dp"
-        android:text="@string/ok"
+        android:id="@+id/btn_Login_Main"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/login"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.93"
+        app:layout_constraintHorizontal_bias="0.951"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edt_Pseudo_Main" />
+        app:layout_constraintTop_toBottomOf="@+id/edt_password_Main" />
+
+    <Button
+        android:id="@+id/btn_Signin_Main"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/sign_in"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@+id/btn_Login_Main"
+        app:layout_constraintStart_toStartOf="@+id/btn_Login_Main"
+        app:layout_constraintTop_toBottomOf="@+id/btn_Login_Main" />
+
+    <ProgressBar
+        android:id="@+id/loader"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

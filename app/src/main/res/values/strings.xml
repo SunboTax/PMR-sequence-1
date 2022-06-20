@@ -6,8 +6,11 @@
     <string name="SettingActivity" />
     <string name="ChoixListActivity" />
     <string name="List" />
-    <string name="ok">OK</string>
-    <string name="pseudo">Pseudo</string>
     <string name="preference">Preference</string>
     <string name="checkbox">CheckBox</string>
+    <string name="name">Name</string>
+    <string name="password">Password</string>
+    <string name="internet_access">Internet access</string>
+    <string name="sign_in">sign in</string>
+    <string name="login">login</string>
 </resources>

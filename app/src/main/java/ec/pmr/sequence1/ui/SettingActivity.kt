@@ -1,6 +1,5 @@
-package ec.pmr.sequence1
+package ec.pmr.sequence1.ui
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.CheckBoxPreference
 import android.preference.EditTextPreference
@@ -8,20 +7,17 @@ import android.preference.Preference
 import android.preference.PreferenceActivity
 import android.util.Log
 import android.widget.Toast
+import ec.pmr.sequence1.R
 
 class SettingActivity : PreferenceActivity(), Preference.OnPreferenceChangeListener{
-    var checkBoxPreference:CheckBoxPreference ?= null
-    var editTextPreference:EditTextPreference ?= null
+    private lateinit var editTextPreference:EditTextPreference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.preferences)
         Log.d("SettingPref","starting")
-        checkBoxPreference = findPreference("default_enabled") as CheckBoxPreference
-        editTextPreference = findPreference("default_login_pseudo") as EditTextPreference
-
+        editTextPreference = findPreference("default_url") as EditTextPreference
         editTextPreference?.onPreferenceChangeListener = this
-        checkBoxPreference?.onPreferenceChangeListener = this
 
     }
 

@@ -3,24 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:key="default_preference">
 
-    <CheckBoxPreference
-        android:key="default_enabled"
-        android:title="Using Default"
-        android:summary="choose to use a default pseudo or not"
-        android:defaultValue="false"/>
+<!--    <CheckBoxPreference-->
+<!--        android:key="default_enabled"-->
+<!--        android:title="Using Default"-->
+<!--        android:summary="choose to use a default pseudo or not"-->
+<!--        android:defaultValue="false"/>-->
 
     <PreferenceCategory
-        android:key="default_login_setting"
-        android:title="Default Pesudo"
+        android:key="default_url_setting"
+        android:title="Default URL"
         >
 
         <EditTextPreference
-            android:key="default_login_pseudo"
+            android:key="default_url"
             android:textColor="#BC787575"
             android:textColorHint="#9C9696"
-            android:title="prefered pseudo"
-            android:defaultValue=""
-            android:text="pseudo"/>
+            android:title="url of the api"
+            android:text="http://tomnab.fr/todo-api/"
+            android:defaultValue="http://tomnab.fr/todo-api/"/>
     </PreferenceCategory>
 
 

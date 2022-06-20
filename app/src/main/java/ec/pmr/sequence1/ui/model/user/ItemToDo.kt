@@ -1,4 +1,4 @@
-package ec.pmr.sequence1.model
+package ec.pmr.sequence1.ui.model.user
 
 import java.io.Serializable
 

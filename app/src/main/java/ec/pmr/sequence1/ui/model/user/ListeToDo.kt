@@ -1,4 +1,4 @@
-package ec.pmr.sequence1.model
+package ec.pmr.sequence1.ui.model.user
 
 import java.io.Serializable
 import kotlin.collections.ArrayList
@@ -40,9 +40,9 @@ class ListeToDo(private var titreListeTodo: String) :Serializable {
         return false
     }
 
-    fun rechercherItem(descriptionItem:String):ItemToDo{
+    fun rechercherItem(descriptionItem:String): ItemToDo {
         val lesItems:ArrayList<ItemToDo> = this.lesItems as ArrayList<ItemToDo>
-        var itemToDo:ItemToDo? = null
+        var itemToDo: ItemToDo? = null
         for(it in lesItems){
             if(it.getDescription() == descriptionItem){
                 itemToDo = it
