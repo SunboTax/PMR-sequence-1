@@ -21,6 +21,13 @@
             android:title="url of the api"
             android:text="http://tomnab.fr/todo-api/"
             android:defaultValue="http://tomnab.fr/todo-api/"/>
+        <EditTextPreference
+            android:key="token"
+            android:textColor="#BC787575"
+            android:textColorHint="#9C9696"
+            android:title="token"
+            android:text=""
+            android:defaultValue=""/>
     </PreferenceCategory>
 
 

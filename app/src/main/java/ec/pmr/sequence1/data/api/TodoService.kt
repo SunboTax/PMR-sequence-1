@@ -1,6 +1,6 @@
 package ec.pmr.sequence1.data.api
 
-import android.util.Log
+import ec.pmr.sequence1.data.api.response.*
 import retrofit2.http.*
 
 interface TodoService {
@@ -10,38 +10,39 @@ interface TodoService {
     suspend fun login(
         @Query("user") username: String,
         @Query("password") password: String
-    ): User
+    ): UserResponse
 
     @POST("users")
     suspend fun addUser(
         @Query("pseudo") username: String,
-        @Query("pass") password: String
-    ):User
+        @Query("pass") password: String,
+        @Query("hash") token: String
+    ): UserResponse
 
     //get all the lists
     @GET("lists")
     suspend fun getLists(
         @Query("hash") token: String
-    ): Lists
+    ): ListsResponse
 
     // show the items in the list clicked
     @GET("lists/{list_id}/items")
     suspend fun getItems(
         @Path("list_id") listId: Int,
         @Query("hash") token: String
-    ): Items
+    ): ItemsResponse
 
     // add a new list
     @POST("lists")
     suspend fun addList(
         @Query("label") label: String,
         @Query("hash") token: String
-    ): ListOperation
+    ): ListResponse
 
     @DELETE("lists/{list_id}")
     suspend fun deleteList(
         @Path("list_id") listId: Int,
-        @Query("hash") token:String
+        @Query("hash") token: String
     )
 
     // add a new item(which is not checked by default)
@@ -50,7 +51,14 @@ interface TodoService {
         @Path("list_id") listId: Int,
         @Query("label") label: String,
         @Query("hash") token: String
-    ): ItemOperation
+    ): ItemResponse
+
+    @GET("lists/{list_id}/items/{item_id}")
+    suspend fun getItem(
+        @Path("list_id") listId: Int,
+        @Path("item_id") itemId: Int,
+        @Query("hash") token: String
+    ): ItemResponse
 
     // change the status of the item
     @PUT("lists/{list_id}/items/{item_id}")
@@ -59,12 +67,12 @@ interface TodoService {
         @Path("item_id") itemId: Int,
         @Query("check") isChecked: String,
         @Query("hash") token: String
-    ): ItemOperation
+    ): ItemResponse
 
     @DELETE("lists/{list_id}/items/{item_id}")
     suspend fun deleteItem(
         @Path("list_id") listId: Int,
         @Path("item_id") itemId: Int,
         @Query("hash") token: String
-    ):ItemOperation
+    ): ItemResponse
 }

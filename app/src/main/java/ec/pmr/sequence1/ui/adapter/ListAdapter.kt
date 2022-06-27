@@ -7,7 +7,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import androidx.recyclerview.widget.RecyclerView
 import ec.pmr.sequence1.R
-import ec.pmr.sequence1.data.api.TodoList
+import ec.pmr.sequence1.data.api.model.TodoList
 
 class ListAdapter(
     private val dataSet: ArrayList<TodoList>

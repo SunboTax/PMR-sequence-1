@@ -5,10 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageButton
-import androidx.appcompat.view.menu.MenuView
 import androidx.recyclerview.widget.RecyclerView
 import ec.pmr.sequence1.R
-import ec.pmr.sequence1.data.api.TodoItem
+import ec.pmr.sequence1.data.api.model.TodoItem
 
 class ItemAdapter (
     val dataSet: ArrayList<TodoItem>
@@ -73,7 +72,7 @@ class ItemAdapter (
 
         fun bind(item: TodoItem) {
             itemTitre.text = item.label
-            itemTitre.isChecked = item.isChecked == "1"
+            itemTitre.isChecked = item.checked == "1"
         }
     }
 }
